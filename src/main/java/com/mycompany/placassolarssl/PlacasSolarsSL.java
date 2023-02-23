@@ -30,93 +30,57 @@ public class PlacasSolarsSL {
     };
 
     private static void addCasaMain(String[] input) throws InstantiationException {
-        estaEnLista(input[1]);
-        Casa casa = new Casa(input[1], input[2], Integer.parseInt(input[3]));
-            casasClientes.add(casa);
-            System.out.println("OK: Casa enregistrada");
-        }
-
-
-private static void addPlacaMain(String nif, int superficie, float precio, int potencia) throws IllegalStateException, InstantiationException {
-        if (!casasClientes.isEmpty()) {
-            if (estaEnLista(nif)) {
-                getCasa(nif).addPlaca(superficie, precio, potencia);
-
-            } else {
-                System.out.println(listadoErrores[3]);
-            }
+        if (input.length != 4) {
+            estaEnLista(input[1]);
         } else {
-            System.out.println(listadoErrores[4]);
+            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ADDCASA);
         }
+        Casa casa = new Casa(input[1], input[2], input[3]);
+        casasClientes.add(casa);
+        System.out.println("OK: Casa enregistrada");
     }
 
-    public static void addElectroMain(String nif, String descripcion, int potencia) {
-        if (!casasClientes.isEmpty()) {
-            if (estaEnLista(nif)) {
-                int numeroSalida = getCasa(nif).addElectro(descripcion, potencia);
-                if (numeroSalida == 0) {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida] + "Aparell afegit a la casa.");
-                } else {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida]);
-                }
-            } else {
-                System.out.println(listadoErrores[3]);
-            }
-        } else {
-            System.out.println(listadoErrores[4]);
+    private static void addPlacaMain(String[] input) throws InstantiationException {
+        if (input.length != 5) {
+            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ADDPLACA);
         }
+        noHayCasas();
+        getCasa(input[1]).addPlaca(input[2], input[3], input[4]);
+        System.out.println("OK: Aparell afegit a la casa.");
     }
 
-    public static void onCasaMain(String nif) {
-        if (!casasClientes.isEmpty()) {
-            if (estaEnLista(nif)) {
-                int numeroSalida = getCasa(nif).onCasa();
-                if (numeroSalida == 0) {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida] + "Interruptor general activat.");
-                } else {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida]);
-                }
-            } else {
-                System.out.println(listadoErrores[3]);
-            }
-        } else {
-            System.out.println(listadoErrores[4]);
+    public static void addElectroMain(String[] input) throws InstantiationException {
+        if (input.length != 4) {
+            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ADDELECTRO);
         }
+        noHayCasas();
+
+        getCasa(input[1]).addElectro(input[2], input[3]);
 
     }
 
-    public static void onElectroMain(String nif, String desc) {
-        if (!casasClientes.isEmpty()) {
-            if (estaEnLista(nif)) {
-                int numeroSalida = getCasa(nif).onElectro(desc);
-                if (numeroSalida == 0) {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida] + "Aparell encès.");
-                } else {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida]);
-                }
-            } else {
-                System.out.println(listadoErrores[3]);
-            }
-        } else {
-            System.out.println(listadoErrores[4]);
+    public static void onCasaMain(String[] input) throws InstantiationException {
+        if (input.length != 2) {
+            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ONCASA);
         }
+        noHayCasas();
+        getCasa(input[1]).onCasa();
     }
 
-    public static void offElectroMain(String nif, String desc) {
-        if (!casasClientes.isEmpty()) {
-            if (estaEnLista(nif)) {
-                int numeroSalida = getCasa(nif).offElectro(desc);
-                if (numeroSalida == 0) {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida] + "Aparell apagat");
-                } else {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida]);
-                }
-            } else {
-                System.out.println(listadoErrores[3]);
-            }
-        } else {
-            System.out.println(listadoErrores[4]);
+    public static void onElectroMain(String[] input) throws InstantiationException {
+        if (input.length != 3) {
+            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ONCASA);
         }
+        noHayCasas();
+        getCasa(input[1]).onElectro(input[2]);
+    }
+
+    public static void offElectroMain(String[] input) throws InstantiationException {
+        if (input.length != 3) {
+            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ONCASA);
+        }
+        noHayCasas();
+        getCasa(input[1]).offElectro(input[2]);
     }
 
     public static void list() {
@@ -185,7 +149,7 @@ private static void addPlacaMain(String nif, int superficie, float precio, int p
         }
     }
 
-    public static void estaEnLista(String nif) throws InstantiationException {
+    public static boolean estaEnLista(String nif) throws InstantiationException {
         boolean encontrado = false;
         for (Casa casa : casasClientes) {
             if (casa.getNif().equalsIgnoreCase(nif)) {
@@ -194,10 +158,24 @@ private static void addPlacaMain(String nif, int superficie, float precio, int p
         }
         if (!encontrado) {
             throw new InstantiationError(ErroresPosibles.CASA_REGISTRADA);
-    }
+        }
+        return encontrado;
     }
 
-    public static Casa getCasa(String nif) {
+    public static void noHayCasas() throws InstantiationException {
+        boolean hayCasa = false;
+        if (!casasClientes.isEmpty()) {
+            hayCasa = true;
+        }
+        if (!hayCasa) {
+            throw new InstantiationException(ErroresPosibles.NO_CASAS);
+        }
+    }
+
+    public static Casa getCasa(String nif) throws InstantiationException {
+        if (!estaEnLista(nif)) {
+            throw new InstantiationException(ErroresPosibles.NO_EXISTE_CASA);
+        }
         for (Casa casa : casasClientes) {
             if (casa.getNif().equalsIgnoreCase(nif)) {
                 return casa;
@@ -220,44 +198,19 @@ private static void addPlacaMain(String nif, int superficie, float precio, int p
 
             switch (comando) {
                 case "addcasa":
-                    if (input.length == 4) {
-                        addCasaMain(input);
-                    } else {
-                        System.out.println(listadoErrores[5]);
-                        System.out.println("Ús: addCasa [nif] [nom] [superficie]");
-                    }
+                    addCasaMain(input);
                     break;
                 case "addplaca":
-                    if (input.length == 5) {
-                        addPlacaMain(input[1], Integer.parseInt(input[2]), (Float.parseFloat(input[3])), Integer.parseInt(input[4]));
-                    } else {
-                        System.out.println(listadoErrores[5]);
-                        System.out.println("Ús: addPlaca [nif] [superficie] [preu] [potencia]");
-                    }
+                    addPlacaMain(input);
                     break;
                 case "addaparell":
-                    if (input.length == 4) {
-                        addElectroMain(input[1], input[2], Integer.parseInt(input[3]));
-                    } else {
-                        System.out.println(listadoErrores[5]);
-                        System.out.println("Uso: addAparell [nif] [descripció] [potencia]");
-                    }
+                    addElectroMain(input);
                     break;
                 case "oncasa":
-                    if (input.length == 2) {
-                        onCasaMain(input[1]);
-                    } else {
-                        System.out.println(listadoErrores[5]);
-                        System.out.println("Uso: onCasa [nif]");
-                    }
+                    onCasaMain(input);
                     break;
                 case "onaparell":
-                    if (input.length == 3) {
-                        onElectroMain(input[1], input[2]);
-                    } else {
-                        System.out.println(listadoErrores[5]);
-                        System.out.println("Ús: onAparell [nif] [descripció aparell]");
-                    }
+                    onElectroMain(input);
                     break;
                 case "offaparell":
                     if (input.length == 3) {

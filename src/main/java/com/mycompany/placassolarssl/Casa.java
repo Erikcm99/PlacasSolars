@@ -19,8 +19,8 @@ public class Casa {
     private ArrayList<Placa> placasInstaladas = new ArrayList<>();
     private ArrayList<Electrodomestico> electros = new ArrayList<>();
     private String[] listadoErrores = {
-        /*0*/ "OK: ",
-        /*1*/ 
+        /*0*/"OK: ",
+        /*1*/
         /*2*/ "ERROR: El precio tiene que ser mauor que 0",
         /*3*/ "ERROR: La potencia tiene que ser mayor que 0",
         /*4*/ "ERROR: La placa que se ha tratado de asignar es más grande que la superficie de tejado restante",
@@ -29,75 +29,72 @@ public class Casa {
         /*7*/ "ERROR: No hay ningún electrodoméstico registrado con esa descripción en la casa",
         /*8*/ "ERROR: Electrodoméstico ya registrado",
         /*9*/ "ERROR: La casa ya tiene el interruptor encendido",
-        /*10*/"ERROR: El electrodoméstico ya está apagado"};
+        /*10*/ "ERROR: El electrodoméstico ya está apagado"};
 
-    public Casa(String nif, String nombre, int superficie)throws InstantiationException  {
-        if (superficie < 10){
+    public Casa(String nif, String nombre, String superficie) throws InstantiationException {
+        int superf = Integer.parseInt(superficie);
+        if (superf < 10) {
             throw new InstantiationException(ErroresPosibles.SUPERF_TEJADO10);
         }
         this.nif = nif;
         this.nombre = nombre;
-        this.superficieTejado = superficie;
+        this.superficieTejado = superf;
         this.interruptor = true;
     }
 
-    public void addPlaca(int superficie, float precio, int potencia) throws InstantiationException {
-        if (superficie > superficieRestante()) {
+    public void addPlaca(String superficie, String precio, String potencia) throws InstantiationException {
+        float precioOK = Float.parseFloat(precio);
+        int potenciaOK = Integer.parseInt(potencia);
+        int superficieOK = Integer.parseInt(superficie);
+        if (superficieOK > superficieRestante()) {
             throw new InstantiationException();
         }
-        Placa placa = new Placa(superficie, precio, potencia);
-        
+        Placa placa = new Placa(superficieOK, precioOK, potenciaOK);
+
         placasInstaladas.add(placa);
     }
 
-    public int addElectro(String descripcion, int potencia) {
-        if (electroRegistrado(descripcion)) {
-            return 8;
-        }
-        if (potencia < 0) {
-            return 3;
-        }
-        Electrodomestico electro = new Electrodomestico(descripcion, potencia);
+    public void addElectro(String descripcion, String potencia) throws InstantiationException {
+        int potenciaOK = Integer.parseInt(potencia);
+        electroRegistrado(descripcion);
+        Electrodomestico electro = new Electrodomestico(descripcion, potenciaOK);
         electros.add(electro);
-        return 0;
     }
 
-    public int onCasa() {
+    public void onCasa() throws InstantiationException {
         if (this.interruptor == true) {
-            return 9;
+            throw new InstantiationException(ErroresPosibles.CASA_YA_ON);
         } else {
             this.interruptor = true;
-            return 0;
         }
     }
 
-    public int onElectro(String desc) {
+    public void onElectro(String desc) throws InstantiationException {
         if (this.interruptor == false) {
-            return 5;
+            throw new InstantiationException(ErroresPosibles.ELECTRO_YA_APAGADO);
         }
         if (!electroRegistrado(desc)) {
-            return 7;
+            throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
         }
+
         getElectro(desc).setInterruptor(true);
         if (consumoElectros() > potenciaPlacas()) {
             this.interruptor = false;
             for (Electrodomestico ele : electros) {
                 ele.setInterruptor(false);
             }
-            return 6;
+            throw new InstantiationException(ErroresPosibles.PLOMOS_DOWN);
         }
-        return 0;
     }
 
-    public int offElectro(String desc) {
+    public void offElectro(String desc) throws InstantiationException {
         if (!electroRegistrado(desc)) {
-            return 7;
+            throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
         }
         if (getElectro(desc).isInterruptor() == false) {
-            return 10;
+            throw new InstantiationException(ErroresPosibles.ELECTRO_YA_APAGADO);
         }
         getElectro(desc).setInterruptor(false);
-        return 0;
     }
 
     public int potenciaPlacas() {
@@ -107,10 +104,11 @@ public class Casa {
         }
         return total;
     }
-    public ArrayList<String> listaElectrosOn(){
+
+    public ArrayList<String> listaElectrosOn() {
         ArrayList<String> listaElectros = new ArrayList<>();
-        for (Electrodomestico electro: electros){
-            if (electro.isInterruptor()){
+        for (Electrodomestico electro : electros) {
+            if (electro.isInterruptor()) {
                 listaElectros.add(electro.getDescripcion());
             }
         }
@@ -147,13 +145,17 @@ public class Casa {
         return superficieTejado - tamañoPlacas();
     }
 
-    public boolean electroRegistrado(String desc) {
+    public boolean electroRegistrado(String desc) throws InstantiationException {
+        boolean coincidencia = false;
         for (Electrodomestico electro : electros) {
             if (electro.getDescripcion().equalsIgnoreCase(desc)) {
-                return true;
+                coincidencia = true;
             }
         }
-        return false;
+        if (!coincidencia) {
+            throw new InstantiationException(ErroresPosibles.ELECTRO_REGISTRADO);
+        }
+        return coincidencia;
     }
 
     public String getNif() {
