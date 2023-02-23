@@ -20,7 +20,7 @@ public class Casa {
     private ArrayList<Electrodomestico> electros = new ArrayList<>();
     private String[] listadoErrores = {
         /*0*/ "OK: ",
-        /*1*/ "ERROR: La superficie tiene que ser mayor que 0",
+        /*1*/ 
         /*2*/ "ERROR: El precio tiene que ser mauor que 0",
         /*3*/ "ERROR: La potencia tiene que ser mayor que 0",
         /*4*/ "ERROR: La placa que se ha tratado de asignar es más grande que la superficie de tejado restante",
@@ -31,29 +31,23 @@ public class Casa {
         /*9*/ "ERROR: La casa ya tiene el interruptor encendido",
         /*10*/"ERROR: El electrodoméstico ya está apagado"};
 
-    public Casa(String nif, String nombre, int superficie) {
+    public Casa(String nif, String nombre, int superficie)throws InstantiationException  {
+        if (superficie < 10){
+            throw new InstantiationException(ErroresPosibles.SUPERF_TEJADO10);
+        }
         this.nif = nif;
         this.nombre = nombre;
         this.superficieTejado = superficie;
         this.interruptor = true;
     }
 
-    public int addPlaca(int superficie, float precio, int potencia) {
-        if (superficie <= 0) {
-            return 1;
-        }
-        if (precio <= 0) {
-            return 2;
-        }
-        if (potencia <= 0) {
-            return 3;
-        }
+    public void addPlaca(int superficie, float precio, int potencia) throws InstantiationException {
         if (superficie > superficieRestante()) {
-            return 4;
+            throw new InstantiationException();
         }
         Placa placa = new Placa(superficie, precio, potencia);
+        
         placasInstaladas.add(placa);
-        return 0;
     }
 
     public int addElectro(String descripcion, int potencia) {

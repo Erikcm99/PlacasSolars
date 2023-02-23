@@ -14,7 +14,17 @@ public class Placa {
     private float precioPlaca;
     private int potenciaPlaca;
 
-    public Placa(int superficie, float precio, int potencia) {
+    public Placa(int superficie, float precio, int potencia) throws InstantiationException {
+
+        if (superficie <= 0) {
+            throw new InstantiationException(ErroresPosibles.SUPERF_INSUF);
+        }
+        if (precio <= 0) {
+            throw new InstantiationException(ErroresPosibles.PRECIO_INSUF);
+        }
+        if (potencia <= 0) {
+            throw new InstantiationException(ErroresPosibles.POTENC_INSUF);
+        }
         this.superficiePlaca = superficie;
         this.precioPlaca = precio;
         this.potenciaPlaca = potencia;

@@ -17,48 +17,36 @@ public class PlacasSolarsSL {
 
     private static ArrayList<Casa> casasClientes = new ArrayList<>();
     private static String[] listadoErrores = {
-   /*0*/ "ERROR: Número de paràmetres incorrecte.",
-   /*1*/ "ERROR: Superficie incorrecta. Ha de ser més gran de 10.",
-   /*2*/ "ERROR: Ja hi ha una casa registrada amb aquest nif",
-   /*3*/ "ERROR: No hi ha cap casa registrada amb aquest nif.",
-   /*4*/ "No hi ha cases registrades.",
-   /*5*/ "ERROR: Número de paràmetres incorrecte.",
-   /*6*/ "ERROR: Comanda incorrecta",
-   /*7*/ "No té cap aparell elèctric registrat.",
-   /*8*/ "No té plaques solars instal·lades."
-        
+        /*0*/"ERROR: Número de paràmetres incorrecte.",
+        /*1*/ "ERROR: Superficie incorrecta. Ha de ser més gran de 10.",
+        /*2*/ "ERROR: Ja hi ha una casa registrada amb aquest nif",
+        /*3*/ "ERROR: No hi ha cap casa registrada amb aquest nif.",
+        /*4*/ "No hi ha cases registrades.",
+        /*5*/ "ERROR: Número de paràmetres incorrecte.",
+        /*6*/ "ERROR: Comanda incorrecta",
+        /*7*/ "No té cap aparell elèctric registrat.",
+        /*8*/ "No té plaques solars instal·lades."
 
     };
 
-    private static void addCasaMain(String nif, String nom, int superficie) {
-        if (superficie >= 10) {
-            Casa casa = new Casa(nif, nom, superficie);
-            if (!estaEnLista(nif)) {
-                casasClientes.add(casa);
-                System.out.println(casa.getListadoErrores()[0] + "Casa enregistrada");
-            } else {
-                System.out.println(listadoErrores[2]);
-            }
-        } else {
-            System.out.println(listadoErrores[1]);
+    private static void addCasaMain(String[] input) throws InstantiationException {
+        estaEnLista(input[1]);
+        Casa casa = new Casa(input[1], input[2], Integer.parseInt(input[3]));
+            casasClientes.add(casa);
+            System.out.println("OK: Casa enregistrada");
         }
-    }
 
-    private static void addPlacaMain(String nif, int superficie, float precio, int potencia) {
+
+private static void addPlacaMain(String nif, int superficie, float precio, int potencia) throws IllegalStateException, InstantiationException {
         if (!casasClientes.isEmpty()) {
             if (estaEnLista(nif)) {
-                int numeroSalida = getCasa(nif).addPlaca(superficie, precio, potencia);
-                if (numeroSalida == 0) {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida] + "Placa afegida a la casa.");
-                } else if (numeroSalida == 4) {
-                    System.out.println(getCasa(nif).getListadoErrores()[numeroSalida] + "(" + getCasa(nif).superficieRestante() + "m2)");
-                }
+                getCasa(nif).addPlaca(superficie, precio, potencia);
+
             } else {
                 System.out.println(listadoErrores[3]);
             }
         } else {
             System.out.println(listadoErrores[4]);
-
         }
     }
 
@@ -197,13 +185,16 @@ public class PlacasSolarsSL {
         }
     }
 
-    public static boolean estaEnLista(String nif) {
+    public static void estaEnLista(String nif) throws InstantiationException {
+        boolean encontrado = false;
         for (Casa casa : casasClientes) {
             if (casa.getNif().equalsIgnoreCase(nif)) {
-                return true;
+                encontrado = true;
             }
         }
-        return false;
+        if (!encontrado) {
+            throw new InstantiationError(ErroresPosibles.CASA_REGISTRADA);
+    }
     }
 
     public static Casa getCasa(String nif) {
@@ -230,7 +221,7 @@ public class PlacasSolarsSL {
             switch (comando) {
                 case "addcasa":
                     if (input.length == 4) {
-                        addCasaMain(input[1], input[2], Integer.parseInt(input[3]));
+                        addCasaMain(input);
                     } else {
                         System.out.println(listadoErrores[5]);
                         System.out.println("Ús: addCasa [nif] [nom] [superficie]");
