@@ -14,20 +14,23 @@ public class Placa {
     private float precioPlaca;
     private int potenciaPlaca;
 
-    public Placa(int superficie, float precio, int potencia) throws InstantiationException {
+    public Placa(String superficie, String precio, String potencia) throws InstantiationException {
+        float precioOK = Float.parseFloat(precio);
+        int potenciaOK = Integer.parseInt(potencia);
+        int superficieOK = Integer.parseInt(superficie);
 
-        if (superficie <= 0) {
+        if (superficieOK <= 0) {
             throw new InstantiationException(ErroresPosibles.SUPERF_INSUF);
         }
-        if (precio <= 0) {
+        if (precioOK <= 0) {
             throw new InstantiationException(ErroresPosibles.PRECIO_INSUF);
         }
-        if (potencia <= 0) {
+        if (potenciaOK <= 0) {
             throw new InstantiationException(ErroresPosibles.POTENC_INSUF);
         }
-        this.superficiePlaca = superficie;
-        this.precioPlaca = precio;
-        this.potenciaPlaca = potencia;
+        this.superficiePlaca = superficieOK;
+        this.precioPlaca = precioOK;
+        this.potenciaPlaca = potenciaOK;
     }
 
     public int getPotenciaPlaca() {

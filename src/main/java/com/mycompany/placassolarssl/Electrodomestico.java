@@ -14,9 +14,14 @@ public class Electrodomestico {
     private int consumo;
     private boolean interruptor;
 
-    public Electrodomestico(String descripcion, int consumo) {
+    public Electrodomestico(String descripcion, String potencia)throws InstantiationException {
+        int potenciaOK = Integer.parseInt(potencia);
+        if (potenciaOK <= 0){
+            throw new InstantiationException(ErroresPosibles.POTENC_INSUF);
+        }
+
         this.descripcion = descripcion;
-        this.consumo = consumo;
+        this.consumo = potenciaOK;
         this.interruptor = false;
     }
 

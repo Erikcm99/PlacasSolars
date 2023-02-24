@@ -36,28 +36,24 @@ public class Casa {
         if (superf < 10) {
             throw new InstantiationException(ErroresPosibles.SUPERF_TEJADO10);
         }
-        this.nif = nif;
+        this.nif = nif.toUpperCase();
         this.nombre = nombre;
         this.superficieTejado = superf;
         this.interruptor = true;
     }
 
     public void addPlaca(String superficie, String precio, String potencia) throws InstantiationException {
-        float precioOK = Float.parseFloat(precio);
-        int potenciaOK = Integer.parseInt(potencia);
         int superficieOK = Integer.parseInt(superficie);
         if (superficieOK > superficieRestante()) {
-            throw new InstantiationException();
+            throw new InstantiationException(ErroresPosibles.ESPACIO_TEJADO_INSUF);
         }
-        Placa placa = new Placa(superficieOK, precioOK, potenciaOK);
-
+        Placa placa = new Placa(superficie, precio, potencia);
         placasInstaladas.add(placa);
     }
 
     public void addElectro(String descripcion, String potencia) throws InstantiationException {
-        int potenciaOK = Integer.parseInt(potencia);
         electroRegistrado(descripcion);
-        Electrodomestico electro = new Electrodomestico(descripcion, potenciaOK);
+        Electrodomestico electro = new Electrodomestico(descripcion, potencia);
         electros.add(electro);
     }
 
@@ -73,9 +69,6 @@ public class Casa {
         if (this.interruptor == false) {
             throw new InstantiationException(ErroresPosibles.ELECTRO_YA_APAGADO);
         }
-        if (!electroRegistrado(desc)) {
-            throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
-        }
 
         getElectro(desc).setInterruptor(true);
         if (consumoElectros() > potenciaPlacas()) {
@@ -88,9 +81,6 @@ public class Casa {
     }
 
     public void offElectro(String desc) throws InstantiationException {
-        if (!electroRegistrado(desc)) {
-            throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
-        }
         if (getElectro(desc).isInterruptor() == false) {
             throw new InstantiationException(ErroresPosibles.ELECTRO_YA_APAGADO);
         }
@@ -145,17 +135,12 @@ public class Casa {
         return superficieTejado - tamañoPlacas();
     }
 
-    public boolean electroRegistrado(String desc) throws InstantiationException {
-        boolean coincidencia = false;
+    public void electroRegistrado(String desc) throws InstantiationException {
         for (Electrodomestico electro : electros) {
             if (electro.getDescripcion().equalsIgnoreCase(desc)) {
-                coincidencia = true;
+                throw new InstantiationException(ErroresPosibles.ELECTRO_REGISTRADO);
             }
         }
-        if (!coincidencia) {
-            throw new InstantiationException(ErroresPosibles.ELECTRO_REGISTRADO);
-        }
-        return coincidencia;
     }
 
     public String getNif() {
@@ -174,13 +159,20 @@ public class Casa {
         return interruptor;
     }
 
-    public Electrodomestico getElectro(String desc) {
+    public Electrodomestico getElectro(String desc) throws InstantiationException {
+        noHayElectros();
         for (Electrodomestico electro : electros) {
             if (electro.getDescripcion().equalsIgnoreCase(desc)) {
                 return electro;
             }
         }
-        return electros.get(0);
+        throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
+    }
+
+    public void noHayElectros() throws InstantiationException {
+        if (electros.isEmpty()) {
+            throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
+        }
     }
 
     public String[] getListadoErrores() {
