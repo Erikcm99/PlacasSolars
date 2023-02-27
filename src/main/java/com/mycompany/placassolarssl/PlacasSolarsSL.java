@@ -88,7 +88,7 @@ public class PlacasSolarsSL {
         int contador = 1;
         for (Casa casa : casasClientes) {
             System.out.println(" ");
-            System.out.println("Casa" + contador);
+            System.out.println("Casa " + contador);
             contador++;
             System.out.println("Client: " + casa.getNif() + " - " + casa.getNombre());
             System.out.println("Superficie de teulada: " + casa.getSuperficieTejado());
@@ -112,7 +112,7 @@ public class PlacasSolarsSL {
     }
 
     public static void info(String[] input) throws InstantiationException {
-        if (input.length != 3) {
+        if (input.length != 2) {
             throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_INFO);
         }
         noHayCasas();
@@ -201,5 +201,4 @@ public class PlacasSolarsSL {
             }
         } while (!comando.equalsIgnoreCase("quit"));
     }
-
 }

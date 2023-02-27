@@ -11,11 +11,11 @@ package com.mycompany.placassolarssl;
 public class Placa {
 
     private int superficiePlaca;
-    private float precioPlaca;
+    private double precioPlaca;
     private int potenciaPlaca;
 
     public Placa(String superficie, String precio, String potencia) throws InstantiationException {
-        float precioOK = Float.parseFloat(precio);
+        double precioOK = Double.parseDouble(precio);
         int potenciaOK = Integer.parseInt(potencia);
         int superficieOK = Integer.parseInt(superficie);
 
@@ -41,8 +41,7 @@ public class Placa {
         return superficiePlaca;
     }
 
-    public float getPrecioPlaca() {
+    public double getPrecioPlaca() {
         return precioPlaca;
     }
-
 }

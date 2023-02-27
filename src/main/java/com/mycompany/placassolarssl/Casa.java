@@ -18,18 +18,6 @@ public class Casa {
     private boolean interruptor;
     private ArrayList<Placa> placasInstaladas = new ArrayList<>();
     private ArrayList<Electrodomestico> electros = new ArrayList<>();
-    private String[] listadoErrores = {
-        /*0*/"OK: ",
-        /*1*/
-        /*2*/ "ERROR: El precio tiene que ser mauor que 0",
-        /*3*/ "ERROR: La potencia tiene que ser mayor que 0",
-        /*4*/ "ERROR: La placa que se ha tratado de asignar es más grande que la superficie de tejado restante",
-        /*5*/ "ERROR: No se puede encender este electrodoméstico, el interruptor general de la casa está apagado",
-        /*6*/ "ERROR: Han saltado los plomos. La casa ha quedado completamente apagada",
-        /*7*/ "ERROR: No hay ningún electrodoméstico registrado con esa descripción en la casa",
-        /*8*/ "ERROR: Electrodoméstico ya registrado",
-        /*9*/ "ERROR: La casa ya tiene el interruptor encendido",
-        /*10*/ "ERROR: El electrodoméstico ya está apagado"};
 
     public Casa(String nif, String nombre, String superficie) throws InstantiationException {
         int superf = Integer.parseInt(superficie);
@@ -67,7 +55,7 @@ public class Casa {
 
     public void onElectro(String desc) throws InstantiationException {
         if (this.interruptor == false) {
-            throw new InstantiationException(ErroresPosibles.ELECTRO_YA_APAGADO);
+            throw new InstantiationException(ErroresPosibles.CASA_APAGADA);
         }
 
         getElectro(desc).setInterruptor(true);
@@ -123,8 +111,8 @@ public class Casa {
         return total;
     }
 
-    public float precioPlacas() {
-        int total = 0;
+    public double precioPlacas() {
+        double total = 0;
         for (Placa placa : placasInstaladas) {
             total += placa.getPrecioPlaca();
         }
