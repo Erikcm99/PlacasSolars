@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.placassolarssl;
 
 import java.util.ArrayList;
@@ -142,7 +138,7 @@ public class Casa {
     public int getSuperficieTejado() {
         return superficieTejado;
     }
-
+    
     public boolean isInterruptor() {
         return interruptor;
     }
@@ -163,10 +159,6 @@ public class Casa {
         }
     }
 
-    public String[] getListadoErrores() {
-        return listadoErrores;
-    }
-
     public ArrayList<Placa> getPlacasInstaladas() {
         return placasInstaladas;
     }
@@ -174,5 +166,4 @@ public class Casa {
     public ArrayList<Electrodomestico> getElectros() {
         return electros;
     }
-
 }

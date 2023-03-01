@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Project/Maven2/JavaApp/src/main/java/${packagePath}/${mainClassName}.java to edit this template
- */
 package com.mycompany.placassolarssl;
 
 import java.io.BufferedReader;
@@ -16,15 +12,6 @@ import java.util.ArrayList;
 public class PlacasSolarsSL {
 
     private static ArrayList<Casa> casasClientes = new ArrayList<>();
-    private static String[] listadoErrores = {
-        /*0*/"ERROR: Número de paràmetres incorrecte.",
-        /*1*/ "ERROR: Superficie incorrecta. Ha de ser més gran de 10.",
-        /*2*/ "ERROR: Ja hi ha una casa registrada amb aquest nif",
-        /*3*/ "ERROR: No hi ha cap casa registrada amb aquest nif.",
-        /*4*/ "No hi ha cases registrades.",
-        /*5*/ "ERROR: Número de paràmetres incorrecte.",
-        /*6*/ "ERROR: Comanda incorrecta",
-        /*7*/ "No té cap aparell elèctric registrat.", /*8*/};
 
     private static void addCasaMain(String[] input) throws InstantiationException {
         if (input.length != 4) {
@@ -106,7 +93,7 @@ public class PlacasSolarsSL {
             if (!casa.getElectros().isEmpty()) {
                 System.out.println("Aparells registrats: " + casa.getElectros().size());
             } else {
-                System.out.println("No té cap aparell elèctric registrat");
+                System.out.println("No té cap aparell elèctric registrat.");
             }
         }
     }
@@ -123,10 +110,13 @@ public class PlacasSolarsSL {
         System.out.println("Inversió total: " + casa.precioPlacas() + "€");
         System.out.println("Aparells registrats: " + casa.getElectros().size());
         System.out.println("Consum actual: " + casa.consumoElectros() + "W");
-        if (casa.consumoElectros() > 0) {
-            System.out.println("Aparells encesos:");
-            for (String electro : casa.listaElectrosOn()) {
-                System.out.println("\t- " + electro);
+
+        if (!casa.getElectros().isEmpty()) {
+            if (casa.consumoElectros() > 0) {
+                System.out.println("Aparells encesos:");
+                for (String electro : casa.listaElectrosOn()) {
+                    System.out.println("\t- " + electro);
+                }
             }
         }
     }
@@ -134,7 +124,7 @@ public class PlacasSolarsSL {
     public static void yaEstaEnLista(String nif) throws InstantiationException {
         for (Casa casa : casasClientes) {
             if (casa.getNif().equalsIgnoreCase(nif)) {
-                throw new InstantiationError(ErroresPosibles.CASA_REGISTRADA);
+                throw new InstantiationException(ErroresPosibles.CASA_REGISTRADA);
             }
         }
     }
