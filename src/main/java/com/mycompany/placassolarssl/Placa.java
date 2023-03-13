@@ -3,32 +3,36 @@ package com.mycompany.placassolarssl;
 /**
  *
  * @author Erik
+ * 
+ * Esta clase almacena todos los atributos y métodos relacionados con un elect
  */
 public class Placa {
 
     private int superficiePlaca;
     private double precioPlaca;
     private int potenciaPlaca;
+    
+    // En el propio constructor reviso que tanto la potencia como el precio y la 
+    // superficie sean mayor que 0 y si es el caso, instancia el objeto Placa
+    
+    public Placa(int superficie, double precio, int potencia) throws InstantiationException, ErrorValorException {
 
-    public Placa(String superficie, String precio, String potencia) throws InstantiationException {
-        double precioOK = Double.parseDouble(precio);
-        int potenciaOK = Integer.parseInt(potencia);
-        int superficieOK = Integer.parseInt(superficie);
-
-        if (superficieOK <= 0) {
-            throw new InstantiationException(ErroresPosibles.SUPERF_INSUF);
+        if (superficie <= 0) {
+            throw new ErrorValorException(ErrorValorException.SUPERF_INSUF);
         }
-        if (precioOK <= 0) {
-            throw new InstantiationException(ErroresPosibles.PRECIO_INSUF);
+        if (precio <= 0) {
+            throw new ErrorValorException(ErrorValorException.PRECIO_INSUF);
         }
-        if (potenciaOK <= 0) {
-            throw new InstantiationException(ErroresPosibles.POTENC_INSUF);
+        if (potencia <= 0) {
+            throw new ErrorValorException(ErrorValorException.POTENC_INSUF);
         }
-        this.superficiePlaca = superficieOK;
-        this.precioPlaca = precioOK;
-        this.potenciaPlaca = potenciaOK;
+        this.superficiePlaca = superficie;
+        this.precioPlaca = precio;
+        this.potenciaPlaca = potencia;
     }
-
+    
+    // Getters y setters de la clase
+    
     public int getPotenciaPlaca() {
         return potenciaPlaca;
     }

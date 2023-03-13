@@ -12,46 +12,54 @@ public class Casa {
     private String nombre;
     private int superficieTejado;
     private boolean interruptor;
+    // Estas dos arrayList almacenan todos las placas y electrodomésticos de la 
+    // casa 
     private ArrayList<Placa> placasInstaladas = new ArrayList<>();
     private ArrayList<Electrodomestico> electros = new ArrayList<>();
 
-    public Casa(String nif, String nombre, String superficie) throws InstantiationException {
-        int superf = Integer.parseInt(superficie);
-        if (superf < 10) {
-            throw new InstantiationException(ErroresPosibles.SUPERF_TEJADO10);
+    // En el propio constructor reviso que la superficie sea mayor que 10 y si 
+    // es el caso, instancia el objeto Casa
+    public Casa(String nif, String nombre, int superficie) throws InstantiationException, ErrorValorException {
+        if (superficie < 10) {
+            throw new ErrorValorException(ErrorValorException.SUPERF_TEJADO10);
         }
         this.nif = nif.toUpperCase();
         this.nombre = nombre;
-        this.superficieTejado = superf;
+        this.superficieTejado = superficie;
         this.interruptor = true;
     }
 
-    public void addPlaca(String superficie, String precio, String potencia) throws InstantiationException {
-        int superficieOK = Integer.parseInt(superficie);
-        if (superficieOK > superficieRestante()) {
-            throw new InstantiationException(ErroresPosibles.ESPACIO_TEJADO_INSUF);
+    // Este método solo crea y añade la placa si tiene espacio suficiente.
+    public void addPlaca(int superficie, double precio, int potencia) throws InstantiationException, ErrorValorException {
+        if (superficie > superficieRestante()) {
+            throw new ErrorValorException(ErrorValorException.ESPACIO_TEJADO_INSUF);
         }
         Placa placa = new Placa(superficie, precio, potencia);
         placasInstaladas.add(placa);
     }
 
-    public void addElectro(String descripcion, String potencia) throws InstantiationException {
+    // Este método solo crea y añade el electrodoméstico si no ha sido registrado
+    // anteriormente, es decir no hay ninguno más con la misma descripción
+    public void addElectro(String descripcion, int consumo) throws InstantiationException, ErrorDeListaException, ErrorValorException {
         electroRegistrado(descripcion);
-        Electrodomestico electro = new Electrodomestico(descripcion, potencia);
+        Electrodomestico electro = new Electrodomestico(descripcion, consumo);
         electros.add(electro);
     }
 
-    public void onCasa() throws InstantiationException {
-        if (this.interruptor == true) {
-            throw new InstantiationException(ErroresPosibles.CASA_YA_ON);
+    // Si el interruptor de la casa ya está encendido, lanza una excepción, de lo
+    // contrario, lo enciende
+    public void onCasa() throws InstantiationException, ElectricException {
+        if (this.interruptor) {
+            throw new ElectricException(ElectricException.CASA_YA_ON);
         } else {
             this.interruptor = true;
         }
     }
 
-    public void onElectro(String desc) throws InstantiationException {
-        if (this.interruptor == false) {
-            throw new InstantiationException(ErroresPosibles.CASA_APAGADA);
+    // S
+    public void onElectro(String desc) throws InstantiationException, ErrorDeListaException, ElectricException {
+        if (!this.interruptor) {
+            throw new ElectricException(ElectricException.CASA_APAGADA);
         }
 
         getElectro(desc).setInterruptor(true);
@@ -60,13 +68,13 @@ public class Casa {
             for (Electrodomestico ele : electros) {
                 ele.setInterruptor(false);
             }
-            throw new InstantiationException(ErroresPosibles.PLOMOS_DOWN);
+            throw new ElectricException(ElectricException.PLOMOS_DOWN);
         }
     }
 
-    public void offElectro(String desc) throws InstantiationException {
+    public void offElectro(String desc) throws InstantiationException, ErrorDeListaException, ElectricException {
         if (getElectro(desc).isInterruptor() == false) {
-            throw new InstantiationException(ErroresPosibles.ELECTRO_YA_APAGADO);
+            throw new ElectricException(ElectricException.ELECTRO_YA_APAGADO);
         }
         getElectro(desc).setInterruptor(false);
     }
@@ -119,10 +127,10 @@ public class Casa {
         return superficieTejado - tamañoPlacas();
     }
 
-    public void electroRegistrado(String desc) throws InstantiationException {
+    public void electroRegistrado(String desc) throws InstantiationException, ErrorDeListaException {
         for (Electrodomestico electro : electros) {
             if (electro.getDescripcion().equalsIgnoreCase(desc)) {
-                throw new InstantiationException(ErroresPosibles.ELECTRO_REGISTRADO);
+                throw new ErrorDeListaException(ErrorDeListaException.ELECTRO_REGISTRADO);
             }
         }
     }
@@ -138,24 +146,25 @@ public class Casa {
     public int getSuperficieTejado() {
         return superficieTejado;
     }
-    
+
     public boolean isInterruptor() {
         return interruptor;
     }
 
-    public Electrodomestico getElectro(String desc) throws InstantiationException {
+    public Electrodomestico getElectro(String desc) throws InstantiationException, ErrorDeListaException {
         noHayElectros();
         for (Electrodomestico electro : electros) {
             if (electro.getDescripcion().equalsIgnoreCase(desc)) {
                 return electro;
             }
         }
-        throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
+        throw new ErrorDeListaException(ErrorDeListaException.ELECTRO_NO_REGISTRADO);
+
     }
 
-    public void noHayElectros() throws InstantiationException {
+    public void noHayElectros() throws InstantiationException, ErrorDeListaException {
         if (electros.isEmpty()) {
-            throw new InstantiationException(ErroresPosibles.ELECTRO_NO_REGISTRADO);
+            throw new ErrorDeListaException(ErrorDeListaException.ELECTRO_NO_REGISTRADO);
         }
     }
 

@@ -11,62 +11,68 @@ import java.util.ArrayList;
  */
 public class PlacasSolarsSL {
 
+    // 
     private static ArrayList<Casa> casasClientes = new ArrayList<>();
 
-    private static void addCasaMain(String[] input) throws InstantiationException {
+    private static void addCasaMain(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException, ErrorValorException {
         if (input.length != 4) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ADDCASA);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_ADDCASA);
         }
         yaEstaEnLista(input[1]);
-        Casa casa = new Casa(input[1], input[2], input[3]);
+
+        Casa casa = new Casa(input[1], input[2], Integer.parseInt(input[3]));
         casasClientes.add(casa);
         System.out.println("OK: Casa registrada");
     }
 
-    private static void addPlacaMain(String[] input) throws InstantiationException {
+    private static void addPlacaMain(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException, ErrorValorException {
         if (input.length != 5) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ADDPLACA);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_ADDPLACA);
+
         }
-        getCasa(input[1]).addPlaca(input[2], input[3], input[4]);
+        getCasa(input[1]).addPlaca(Integer.parseInt(input[2]), Double.parseDouble(input[3]), Integer.parseInt(input[4]));
         System.out.println("OK: Placa afegida a la casa.");
     }
 
-    public static void addElectroMain(String[] input) throws InstantiationException {
+    public static void addElectroMain(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException, ErrorValorException {
         if (input.length != 4) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ADDELECTRO);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_ADDELECTRO);
         }
-        getCasa(input[1]).addElectro(input[2], input[3]);
+        getCasa(input[1]).addElectro(input[2], Integer.parseInt(input[3]));
         System.out.println("OK: Aparell afegit a la casa.");
     }
 
-    public static void onCasaMain(String[] input) throws InstantiationException {
+    public static void onCasaMain(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException, ElectricException {
         if (input.length != 2) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ONCASA);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_ONCASA);
+
         }
         getCasa(input[1]).onCasa();
         System.out.println("OK: Interruptor general activat.");
     }
 
-    public static void onElectroMain(String[] input) throws InstantiationException {
+    public static void onElectroMain(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException, ElectricException {
         if (input.length != 3) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_ONELECTRO);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_ONELECTRO);
+
         }
         getCasa(input[1]).onElectro(input[2]);
         System.out.println("OK: Aparell encès.");
     }
 
-    public static void offElectroMain(String[] input) throws InstantiationException {
+    public static void offElectroMain(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException, ElectricException {
         if (input.length != 3) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_OFFELECTRO);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_OFFELECTRO);
         }
         getCasa(input[1]).offElectro(input[2]);
         System.out.println("OK: Aparell apagat.");
 
     }
 
-    public static void list(String[] input) throws InstantiationException {
+    public static void list(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException {
         if (input.length != 1) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_LIST);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_LIST);
+
         }
         noHayCasas();
         System.out.println("--- Endolls Solars, S.L. ---");
@@ -98,9 +104,10 @@ public class PlacasSolarsSL {
         }
     }
 
-    public static void info(String[] input) throws InstantiationException {
+    public static void info(String[] input) throws InstantiationException, UsoIncorrectoException, ErrorDeListaException {
         if (input.length != 2) {
-            throw new InstantiationException(ErroresPosibles.PARAMETROS_INSUF + "\n" + ErroresPosibles.USO_INFO);
+            throw new UsoIncorrectoException(UsoIncorrectoException.USO_INFO);
+
         }
         noHayCasas();
         Casa casa = getCasa(input[1]);
@@ -121,31 +128,34 @@ public class PlacasSolarsSL {
         }
     }
 
-    public static void yaEstaEnLista(String nif) throws InstantiationException {
+    public static void yaEstaEnLista(String nif) throws InstantiationException, ErrorDeListaException {
         for (Casa casa : casasClientes) {
             if (casa.getNif().equalsIgnoreCase(nif)) {
-                throw new InstantiationException(ErroresPosibles.CASA_REGISTRADA);
+                throw new ErrorDeListaException(ErrorDeListaException.CASA_REGISTRADA);
+
             }
         }
     }
 
-    public static Casa getCasa(String nif) throws InstantiationException {
+    public static Casa getCasa(String nif) throws InstantiationException, ErrorDeListaException {
         noHayCasas();
         for (Casa casa : casasClientes) {
             if (casa.getNif().equalsIgnoreCase(nif)) {
                 return casa;
             }
         }
-        throw new InstantiationException(ErroresPosibles.NO_EXISTE_CASA);
+        throw new ErrorDeListaException(ErrorDeListaException.NO_EXISTE_CASA);
+
     }
 
     public static ArrayList<Casa> getCasasClientes() {
         return casasClientes;
     }
 
-    public static void noHayCasas() throws InstantiationException {
+    public static void noHayCasas() throws InstantiationException, ErrorDeListaException {
         if (casasClientes.isEmpty()) {
-            throw new InstantiationException(ErroresPosibles.NO_CASAS);
+            throw new ErrorDeListaException(ErrorDeListaException.NO_CASAS);
+
         }
     }
 
@@ -182,11 +192,13 @@ public class PlacasSolarsSL {
                     case "info":
                         info(input);
                         break;
+                    case "quit":
+                        break;
                     default:
-                        System.out.println(ErroresPosibles.COMANDA_INCORRECTA);
+                        System.out.println(UsoIncorrectoException.COMANDA_INCORRECTA);
                         break;
                 }
-            } catch (InstantiationException e) {
+            } catch (InstantiationException | ErrorDeListaException | UsoIncorrectoException | ErrorValorException | ElectricException e) {
                 System.out.println(e.getMessage());
             }
         } while (!comando.equalsIgnoreCase("quit"));
