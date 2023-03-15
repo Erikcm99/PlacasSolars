@@ -4,6 +4,8 @@ package com.mycompany.placassolarssl;
  *
  * @author Erik
  */
+
+// Exccepción de errores relacionados con las listas del programa
 public class ErrorDeListaException extends Exception {
 
     public static final String NO_CASAS = "No hi ha cases registrades.";

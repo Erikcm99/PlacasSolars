@@ -56,7 +56,9 @@ public class Casa {
         }
     }
 
-    // S
+    // Si el interruptor general de la casa esta apagado no se puede encender el electrodomestico
+    // y si al encender el electrodoméstico se supera la potencia de las placas, 
+    // caen los plomos de la casa
     public void onElectro(String desc) throws InstantiationException, ErrorDeListaException, ElectricException {
         if (!this.interruptor) {
             throw new ElectricException(ElectricException.CASA_APAGADA);
@@ -71,14 +73,14 @@ public class Casa {
             throw new ElectricException(ElectricException.PLOMOS_DOWN);
         }
     }
-
+    // Si el electrodomestico ya esta apagado lanza la excepción que le corresponde
     public void offElectro(String desc) throws InstantiationException, ErrorDeListaException, ElectricException {
         if (getElectro(desc).isInterruptor() == false) {
             throw new ElectricException(ElectricException.ELECTRO_YA_APAGADO);
         }
         getElectro(desc).setInterruptor(false);
     }
-
+    // Esta funcion suma todos la potencia que prestan las placas
     public int potenciaPlacas() {
         int total = 0;
         for (Placa placa : placasInstaladas) {
@@ -86,7 +88,7 @@ public class Casa {
         }
         return total;
     }
-
+    // Esta funcion devuelve una lista de electrodomesticos encendidos
     public ArrayList<String> listaElectrosOn() {
         ArrayList<String> listaElectros = new ArrayList<>();
         for (Electrodomestico electro : electros) {
@@ -96,7 +98,7 @@ public class Casa {
         }
         return listaElectros;
     }
-
+    // Aquí se suman los consumos de todos los electrodomesticos encendidos
     public int consumoElectros() {
         int total = 0;
         for (Electrodomestico electro : electros) {
@@ -106,7 +108,7 @@ public class Casa {
         }
         return total;
     }
-
+    // Aqui se suma el tamaño que ocupan las placas
     public int tamañoPlacas() {
         int total = 0;
         for (Placa placa : placasInstaladas) {
@@ -114,7 +116,7 @@ public class Casa {
         }
         return total;
     }
-
+    //Aqui se suma el precio total de las placas instaladas(inversión)
     public double precioPlacas() {
         double total = 0;
         for (Placa placa : placasInstaladas) {
@@ -122,11 +124,12 @@ public class Casa {
         }
         return total;
     }
-
+    // Con este calculo sabemos cuanta superficie restante de tejado queda
     public int superficieRestante() {
         return superficieTejado - tamañoPlacas();
     }
-
+    // Esta funcion es para comprobar si un electro ya esta registrado y si es el caso
+    // lanzar la excepcion correspondiente
     public void electroRegistrado(String desc) throws InstantiationException, ErrorDeListaException {
         for (Electrodomestico electro : electros) {
             if (electro.getDescripcion().equalsIgnoreCase(desc)) {
@@ -134,6 +137,7 @@ public class Casa {
             }
         }
     }
+    //getters
 
     public String getNif() {
         return nif;
@@ -150,7 +154,7 @@ public class Casa {
     public boolean isInterruptor() {
         return interruptor;
     }
-
+    // Primero se comprueba si hay electros en la lista y luego devuelve el que se haya solicitado
     public Electrodomestico getElectro(String desc) throws InstantiationException, ErrorDeListaException {
         noHayElectros();
         for (Electrodomestico electro : electros) {
@@ -159,9 +163,8 @@ public class Casa {
             }
         }
         throw new ErrorDeListaException(ErrorDeListaException.ELECTRO_NO_REGISTRADO);
-
     }
-
+    // Si la lista de electrodomesticos esta vacía lanza una excepción
     public void noHayElectros() throws InstantiationException, ErrorDeListaException {
         if (electros.isEmpty()) {
             throw new ErrorDeListaException(ErrorDeListaException.ELECTRO_NO_REGISTRADO);

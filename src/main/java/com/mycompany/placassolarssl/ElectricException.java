@@ -4,6 +4,8 @@ package com.mycompany.placassolarssl;
  *
  * @author Erik
  */
+
+// Excepción de errores relacionados con la electricidad.
 public class ElectricException extends Exception{
     public static final String CASA_YA_ON = "ERROR: La casa ja té l'interruptor encès.";
     public static final String CASA_APAGADA = "ERROR: No es pot encendre l'aparell. L'interruptor general està apagat.";

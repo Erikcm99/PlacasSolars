@@ -4,6 +4,8 @@ package com.mycompany.placassolarssl;
  *
  * @author Erik
  */
+
+// Excepciones que se muestran cuando se hace un uso incorrecto de un comando
 public class UsoIncorrectoException extends Exception {
     public static final String USO_ADDPLACA = "ERROR: Número de paràmetres incorrecte.\nÚs: addPlaca [nif] [superficie] [preu] [potencia]";
     public static final String USO_ADDCASA = "ERROR: Número de paràmetres incorrecte.\nÚs: addCasa [nif] [nom] [superficie]";
